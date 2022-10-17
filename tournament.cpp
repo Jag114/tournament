@@ -4,9 +4,10 @@
 
 class Warrior {
 public:
-    std::string Name;
-    unsigned int Hp = 1;
-    unsigned int Atk = 1;
+    std::string name;
+    int hp = 1;
+    unsigned int atk = 1;
+    unsigned int critRate = 0; //% 1==100%, 0==0%
 };
 
 class WarriorEnemy : public Warrior {
@@ -16,7 +17,8 @@ public:
 
 class WarriorPlayer : public Warrior {
 public:
-    unsigned int Lvl = 1;
+    unsigned int lvl = 1;
+    unsigned int exp = 23;
     unsigned int availableStatPoints = 10;
     unsigned int hpToPointsRatio = 2;
     unsigned int atkToPointsRatio = 1;
@@ -25,8 +27,24 @@ public:
     int gold = 10;
 };
 
+WarriorEnemy createEnemy(WarriorPlayer& object) { //better name generation
+    WarriorEnemy enemy;
+    enemy.name = "Enemy";
+    srand(time(NULL));
+    int statConstraints = rand() % (object.lvl) + 1;
+    enemy.atk = rand() % statConstraints + 1;
+    enemy.hp = rand() % statConstraints + 5;
+    enemy.expAmount = rand() % 8 + 2;
+    return enemy;
+}
+
 int getStats(WarriorPlayer &object) {
-    std::cout << "Name: " << object.Name << "\n" << "Health points: " << object.Hp << "\n" << "Atk points: " << object.Atk <<"\n";
+    std::cout << "Name: " << object.name << std::endl;
+    std::cout << "Health points: " << object.hp << std::endl;
+    std::cout << "Attack points: " << object.atk << std::endl;
+    std::cout << "Level: " << object.lvl << std::endl;
+    std::cout << "Experience: " << object.exp << std::endl;
+    std::cout << "Crit rate: " << object.critRate << std::endl;
     std::cout << "Stamina: " << object.stamina << std::endl;
     std::cout << "Gold amount: " << object.gold << std::endl;
     std::cout << "Stat points left: " << object.availableStatPoints << std::endl;
@@ -46,10 +64,10 @@ int changeStat(int type, WarriorPlayer &object) {
             switch (type)
             {
             case 1:
-                object.Atk += addedStats * object.atkToPointsRatio;
+                object.atk += addedStats * object.atkToPointsRatio;
                 break;
             case 2:
-                object.Hp += addedStats * object.hpToPointsRatio;
+                object.hp += addedStats * object.hpToPointsRatio;
                 break;
             default:
                 break;
@@ -62,12 +80,12 @@ int changeStat(int type, WarriorPlayer &object) {
     return 0;
 }
 
-int changeName(WarriorPlayer &object) {
-    std::string name;
+int changeName(Warrior &object) { 
+    std::string newName;
     std::cout << "Set your gladiator's name: ";
-    std::cin >> name;
-    object.Name = name;
-    std::cout << "Your gladiator's name is: " << object.Name << "\n";
+    std::cin >> newName;
+    object.name = newName;
+    std::cout << "Your gladiator's name is: " << object.name << "\n";
     return 0;
 }
 
@@ -83,8 +101,8 @@ int train(WarriorPlayer &object) {
             object.stamina--;
             chance = rand() % 100 + 1;
             if (chance <= 8) {
-                object.Atk++;
-                std::cout << "Atk enchanced from" << object.Atk - 1 << " to " << object.Atk <<", current stamina: "<< object.stamina << std::endl;
+                object.atk++;
+                std::cout << "atk enchanced from" << object.atk - 1 << " to " << object.atk <<", current stamina: "<< object.stamina << std::endl;
                 return 0;
             }
             else {
@@ -96,9 +114,9 @@ int train(WarriorPlayer &object) {
             object.stamina--;
             chance = rand() % 100 + 1;
             if (chance <= 8) {
-                object.Hp++;
+                object.hp++;
                 object.stamina--;
-                std::cout << "Hp enchanced from" << object.Hp - 1 << " to " << object.Hp << ", current stamina: " << object.stamina << std::endl;
+                std::cout << "Hp enchanced from" << object.hp - 1 << " to " << object.hp << ", current stamina: " << object.stamina << std::endl;
                 return 0;
             }
             else {
@@ -176,8 +194,8 @@ int church(WarriorPlayer &object) {
     case 1:
         if (object.stamina >= 1) {
             object.stamina -= 1;
-            object.Hp += 1;
-            std::cout << "You feel better, recovered 1 health point, current hp: " << object.Hp << " current stamina: " << object.stamina << std::endl;
+            object.hp += 1;
+            std::cout << "You feel better, recovered 1 health point, current Hp: " << object.hp << " current stamina: " << object.stamina << std::endl;
         }
         else {
             std::cout << "Not enough stamina, current stamina: " << object.stamina << " 1 needed" << std::endl;
@@ -186,8 +204,8 @@ int church(WarriorPlayer &object) {
     case 2:
         if (object.gold >= 5) {
             object.gold -= 5;
-            object.Hp += 3;
-            std::cout << "You feel at peace, recovered 3 health points, current Hp: " << object.Hp << std::endl;
+            object.hp += 3;
+            std::cout << "You feel at peace, recovered 3 health points, current Hp: " << object.hp << std::endl;
             std::cout << "Gold left: " << object.gold << std::endl;
         }
         else {
@@ -197,8 +215,8 @@ int church(WarriorPlayer &object) {
     case 3:
         if (object.gold >= 10) {
             object.gold -= 10;
-            object.Hp += 10;
-            std::cout << "You feel better than ever, recovered 10 health points, current Hp: " << object.Hp << std::endl;
+            object.hp += 10;
+            std::cout << "You feel better than ever, recovered 10 health points, current Hp: " << object.hp << std::endl;
             std::cout << "Gold left: " << object.gold << std::endl;
         }
         else {
@@ -215,25 +233,68 @@ int church(WarriorPlayer &object) {
     return 0;
 }
 
+int battle(WarriorPlayer& playerObject, WarriorEnemy& enemyObject, int& date) {
+    int turn = 0;
+    for (;;) {
+        std::cout << "\nPlayer stats: " << std::endl;
+        std::cout << "Atk: " << playerObject.atk <<std::endl;
+        std::cout << "Hp: " <<playerObject.hp << std::endl;
+        std::cout << "Stamina: " << playerObject.stamina << std::endl;
+
+        std::cout << "Enemy stats: " << std::endl;
+        std::cout << "Atk: " << enemyObject.atk << std::endl;
+        std::cout << "Hp: " << enemyObject.hp << std::endl;
+
+        if (playerObject.hp <= 0 || enemyObject.hp <= 0) {
+            std::string winner = (enemyObject.hp <= 0) ? playerObject.name : enemyObject.name;
+            std::cout << winner << " wins!" << std::endl;
+            if (winner == playerObject.name) {
+                playerObject.exp += enemyObject.expAmount;
+            }
+            date++;
+            return 0;
+        }
+        else{
+            if (turn % 2 == 0) {
+                enemyObject.hp -= playerObject.atk;
+                playerObject.stamina--;
+            }
+            else {
+                playerObject.hp -= enemyObject.atk;
+            }
+            turn++;
+        }
+    }
+}
+
 int jobMenu(WarriorPlayer &object) {
-    printf("NO");
+    printf("Job menu");
     return 0;
 }
 
-WarriorEnemy createEnemy(WarriorPlayer &object) {
-    WarriorEnemy enemy;
-    //atk, hp, exp based on player lvl
-    return enemy;
+int arena(WarriorPlayer& object, int &date) { //stamina req, more rewards, some kind of progress, bosses
+    printf("Arena");
+    WarriorEnemy enemy = createEnemy(object);
+    battle(object, enemy, date);
+    return 0;
 }
+
+int smithy(WarriorPlayer& object) {
+    printf("Smithy");
+    return 0;
+}
+
 
 int main()
 {   
+    int day = 0;
     WarriorPlayer test;
     std::cout << "Name your gladiator: " << std::endl;
     changeName(test);
     for (;;) {
         int option;
         printf("\nMain Menu\n");
+        std::cout << "Day: " << day << std::endl;
         printf("1. Character stats\n2. Redistribute stat points\n3. Train\n4. Go to inn\n");
         printf("5. Go to smithy\n6. Go to church\n7. Go to arena\n8. Earn money\n9. Exit game\n");
         std::cin >> option;
@@ -252,15 +313,16 @@ int main()
             break;
         case 4:
             inn(test);
+            day++;
             break;
         case 5:
-            std::cout << "Smithy not yet built" << std::endl;
+            smithy(test);
             break;
         case 6:
             church(test);
             break;
         case 7:
-            std::cout << "Arena not yet built" << std::endl;
+            arena(test, day);
             break;
         case 8:
             jobMenu(test);
@@ -271,9 +333,21 @@ int main()
         default:
             break;
         }
+
+        while (test.exp >= 10)
+        {
+            test.lvl++;
+            test.exp -= 10;
+        }
+
+        if (test.hp <= 0) {
+            std::cout << "\nYou died, survived "<< day <<" day/s" << std::endl;
+            std::cout << "Your statistics:" << std::endl;
+            getStats(test);
+            return 0;
+        }
+        
     }
-    
-   
     return 0;
 }
 
@@ -289,7 +363,7 @@ int main()
     3.3 death
     3.4 fight mechanics
 
-    4.1 additional stats (crit rate, crit dmg)
+    4.1 additional stats (crit rate, crit dmg?, dodge chance)
     4.2 stat modifiers
     4.3 exp thresholds
     4.4 stat points gained per lvl
