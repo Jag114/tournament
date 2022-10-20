@@ -1,6 +1,8 @@
 ﻿  tournament.cpp
-C:\Nauka\C&Cpp\tournament\tournament.cpp(33,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(61,24): warning C4018: '<=': signed/unsigned mismatch
-C:\Nauka\C&Cpp\tournament\tournament.cpp(95,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(137): warning C4715: 'train': not all control paths return a value
+C:\Nauka\C&Cpp\tournament\tournament.cpp(89,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(117,24): warning C4018: '<=': signed/unsigned mismatch
+C:\Nauka\C&Cpp\tournament\tournament.cpp(151,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(323,64): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(376,23): warning C4018: '<': signed/unsigned mismatch
+C:\Nauka\C&Cpp\tournament\tournament.cpp(193): warning C4715: 'train': not all control paths return a value
   tournament.vcxproj -> C:\Nauka\C&Cpp\tournament\x64\Debug\tournament.exe
