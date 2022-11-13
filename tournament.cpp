@@ -8,7 +8,7 @@ public:
     std::string name;
     int hp;
     unsigned int atk = 1;
-    unsigned int critRate = 1; // 1 to 100
+    unsigned int critRate = 1; // 1 to 100, 1 default
     float critDmg = 1.5;
 };
 
@@ -20,29 +20,47 @@ public:
 
 class WarriorPlayer : public Warrior {
 public:
-    int maxHp = 10;
+    int maxHp = 10; //10 default
     unsigned int lvl = 1;
     unsigned int exp = 0;
     unsigned int availableStatPoints = 10;
     unsigned int hpToPointsRatio = 2;
     unsigned int atkToPointsRatio = 1;
     unsigned int pointsPerLvl = 2;
-    int stamina = 10;
+    int stamina = 10; //10 default
     int gold = 10;
 };
 
 class Item {
 public:
+    std::string name;
     int weight;
     int value;
-    int durability;
-    std::string name;
+    int durability;   
+
+    Item() { //lvl parameter for balance
+        srand(time(NULL));
+        name = "test_helmet";
+        weight = rand() % 5 + 1;
+        value = rand() % 10 + 2;
+        durability = rand() % 15 + 5;
+    }
 };
 
 class Bag {
 public:
     unsigned int bagSize = 10;
-    //std::vector<Item> bagItems = (Item)(1);
+    std::vector<Item> bagItems;
+
+    Item displayItems() {
+        for (int i = 0; i < bagItems.size(); i++) {
+            std::cout << bagItems[i].name << std::endl;
+            std::cout << bagItems[i].weight << std::endl;
+            std::cout << bagItems[i].value << std::endl;
+            std::cout << bagItems[i].durability << std::endl;
+            return bagItems[i];
+        }
+    }
 };
 
 
@@ -289,6 +307,30 @@ int church(WarriorPlayer& object) {
     return 0;
 }
 
+bool doesCrit(WarriorPlayer& object, int crit) {
+    int r = object.critRate;
+    int x = rand() % 101; // 0 - 100
+    int min = x - (r / 2);
+    int max = x + (r / 2);
+    if (min < 0) {
+        max += (min * -1); // moves excessive crit rate to max
+        //min += (min * -1); // equal to zero
+        min = 0;   
+    }
+    if (max > 100) {
+        min -= (max - 100);
+        //max = max - (max - 100); // equals to 100
+        max = 100;
+    }
+
+    if (crit >= min && crit <= max) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 int battle(WarriorPlayer& playerObject, WarriorEnemy& enemyObject, int& date) {
     int turn = 0;
     if (playerObject.stamina > 0) {
@@ -318,9 +360,12 @@ int battle(WarriorPlayer& playerObject, WarriorEnemy& enemyObject, int& date) {
                         playerObject.stamina += 2;
                     }
                     else {
-                        bool doCrit = ((rand() % playerObject.critRate + 0) > 0) ? true : false;
-                        if (doCrit) {
+                        std::cout << "Player attacks" << std::endl;
+                        int crit = rand() % 101; // 0 - 100
+                        bool critChance = doesCrit(playerObject, crit);
+                        if (critChance) {
                             enemyObject.hp -= playerObject.atk * playerObject.critDmg;
+                            printf("HOLY SHIT IT ACTUALLY CRITS LOOK HERE - ");
                         }
                         else {
                             enemyObject.hp -= playerObject.atk;
@@ -329,6 +374,7 @@ int battle(WarriorPlayer& playerObject, WarriorEnemy& enemyObject, int& date) {
                     }
                 }
                 else {
+                    std::cout << "Enemy attacks" << std::endl;
                     playerObject.hp -= enemyObject.atk;
                 }
                 turn++;
@@ -373,21 +419,39 @@ int smithy(WarriorPlayer& object) {
 
 int checkEQ(Bag& eq) {
     Item j;
-    for (int i = 0; i < eq.bagSize; i++)
+
+    for (int i = 0; i < eq.bagItems.size(); i++)
     {
-        //eq.bagItems.at(i) = j;
-       // std::cout << j << std::endl;
+        eq.displayItems();
     }
+
+    return 0;
+}
+
+int addToEQ(Bag& eq, Item& item) {
+
+    eq.bagItems.push_back(item);
+
+    return 0;
+}
+
+int changeCheck() {
+        
 
     return 0;
 }
 
 int main()
 {
+    srand(time(NULL));
     int day = 0;
     WarriorPlayer test;
     test.hp = test.maxHp;
     Bag eq;
+
+    Helmet helmet;
+    addToEQ(eq, helmet);
+
     std::cout << "Name your gladiator: " << std::endl;
     changeName(test);
     for (;;) {
@@ -428,7 +492,7 @@ int main()
             break;
         case 9:
             checkEQ(eq);
-            return 0;
+            break;
         case 10:
             return 0;
         default:
