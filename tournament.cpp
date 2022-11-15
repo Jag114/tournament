@@ -307,30 +307,6 @@ int church(WarriorPlayer& object) {
     return 0;
 }
 
-bool doesCrit(WarriorPlayer& object, int crit) {
-    int r = object.critRate;
-    int x = rand() % 101; // 0 - 100
-    int min = x - (r / 2);
-    int max = x + (r / 2);
-    if (min < 0) {
-        max += (min * -1); // moves excessive crit rate to max
-        //min += (min * -1); // equal to zero
-        min = 0;   
-    }
-    if (max > 100) {
-        min -= (max - 100);
-        //max = max - (max - 100); // equals to 100
-        max = 100;
-    }
-
-    if (crit >= min && crit <= max) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
 int battle(WarriorPlayer& playerObject, WarriorEnemy& enemyObject, int& date) {
     int turn = 0;
     if (playerObject.stamina > 0) {
@@ -361,9 +337,8 @@ int battle(WarriorPlayer& playerObject, WarriorEnemy& enemyObject, int& date) {
                     }
                     else {
                         std::cout << "Player attacks" << std::endl;
-                        int crit = rand() % 101; // 0 - 100
-                        bool critChance = doesCrit(playerObject, crit);
-                        if (critChance) {
+                        int crit = rand() % 100 + 1; // 1 - 100
+                        if (crit <= playerObject.critRate) {
                             enemyObject.hp -= playerObject.atk * playerObject.critDmg;
                             printf("HOLY SHIT IT ACTUALLY CRITS LOOK HERE - ");
                         }
@@ -443,7 +418,6 @@ int changeCheck() {
 
 int main()
 {
-    srand(time(NULL));
     int day = 0;
     WarriorPlayer test;
     test.hp = test.maxHp;
@@ -455,6 +429,7 @@ int main()
     std::cout << "Name your gladiator: " << std::endl;
     changeName(test);
     for (;;) {
+        srand(time(NULL));
         int option;
         printf("\nMain Menu\n");
         std::cout << "Day: " << day << std::endl;
