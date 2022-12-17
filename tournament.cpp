@@ -7,28 +7,68 @@ class Warrior {
 public:
     std::string name;
     int hp;
-    unsigned int atk = 1;
-    unsigned int critRate = 1; // 1 to 100, 1 default
+    int atk = 1;
+    int critRate = 1; // 1 to 100, 1 default
     float critDmg = 1.5;
+public: 
+    void giveName(std::string newName) {
+        this->name = newName;
+    }
+
 };
 
 class WarriorEnemy : public Warrior {
 public:
-    unsigned int expAmount;
-    unsigned int goldAmount;
+    int expAmount;
+    int goldAmount;
 };
 
 class WarriorPlayer : public Warrior {
 public:
     int maxHp = 10; //10 default
-    unsigned int lvl = 1;
-    unsigned int exp = 0;
-    unsigned int availableStatPoints = 10;
-    unsigned int hpToPointsRatio = 2;
-    unsigned int atkToPointsRatio = 1;
-    unsigned int pointsPerLvl = 2;
+    int lvl = 1;
+    int exp = 0;
+    int availableStatPoints = 10;
+    int hpToPointsRatio = 2;
+    int atkToPointsRatio = 1;
+    int pointsPerLvl = 2;
     int stamina = 10; //10 default
     int gold = 10;
+
+public:
+    WarriorPlayer() {
+        this->hp = maxHp;
+    }
+
+    void levelUp() {
+        while (this->exp >= 10)
+        {
+            std::cout << "Level up!" << std::endl;
+            this->lvl++;
+            this->exp -= 10;
+            this->availableStatPoints += 2;
+            this->hp = this->maxHp;
+        }
+    }
+
+    int deathCheck() {
+        if (this->hp <= 0) {
+            return 0;
+        }
+        return 1;
+    }
+
+    void getStats() {
+        std::cout << "Name: " << this->name << std::endl;
+        std::cout << "Health points: " << this->hp << "/" << this->maxHp << std::endl;
+        std::cout << "Attack points: " << this->atk << std::endl;
+        std::cout << "Level: " << this->lvl << std::endl;
+        std::cout << "Experience: " << this->exp << std::endl;
+        std::cout << "Crit rate: " << this->critRate << std::endl;
+        std::cout << "Stamina: " << this->stamina << std::endl;
+        std::cout << "Gold amount: " << this->gold << std::endl;
+        std::cout << "Stat points left: " << this->availableStatPoints << std::endl;
+    }
 };
 
 class Item {
@@ -36,29 +76,32 @@ public:
     std::string name;
     int weight;
     int value;
-    int durability;   
+    int baseDurability;
+    int currentDurability;
 
     Item() { //lvl parameter for balance
         srand(time(NULL));
         name = "test_helmet";
         weight = rand() % 5 + 1;
         value = rand() % 10 + 2;
-        durability = rand() % 15 + 5;
+        baseDurability = rand() % 15 + 5;
+        currentDurability = baseDurability;
     }
 };
 
 class Bag {
 public:
-    unsigned int bagSize = 10;
+    int bagSize = 10;
     std::vector<Item> bagItems;
 
-    Item displayItems() {
+    Bag() {}
+    
+    void displayItems() {
         for (int i = 0; i < bagItems.size(); i++) {
-            std::cout << bagItems[i].name << std::endl;
-            std::cout << bagItems[i].weight << std::endl;
-            std::cout << bagItems[i].value << std::endl;
-            std::cout << bagItems[i].durability << std::endl;
-            return bagItems[i];
+            std::cout << "Name: " << bagItems[i].name << std::endl;
+            std::cout << "Weight: " << bagItems[i].weight << std::endl;
+            std::cout << "Value (g): " << bagItems[i].value << std::endl;
+            std::cout << "Durability: " << bagItems[i].currentDurability << " / " << bagItems[i].baseDurability << std::endl;
         }
     }
 };
@@ -110,19 +153,6 @@ WarriorEnemy createEnemy(WarriorPlayer& object) { //better name generation
     enemy.expAmount = rand() % 8 + 2;
     enemy.goldAmount = rand() % 5 + 1;
     return enemy;
-}
-
-int getStats(WarriorPlayer& object) {
-    std::cout << "Name: " << object.name << std::endl;
-    std::cout << "Health points: " << object.hp << "/" << object.maxHp << std::endl;
-    std::cout << "Attack points: " << object.atk << std::endl;
-    std::cout << "Level: " << object.lvl << std::endl;
-    std::cout << "Experience: " << object.exp << std::endl;
-    std::cout << "Crit rate: " << object.critRate << std::endl;
-    std::cout << "Stamina: " << object.stamina << std::endl;
-    std::cout << "Gold amount: " << object.gold << std::endl;
-    std::cout << "Stat points left: " << object.availableStatPoints << std::endl;
-    return 0;
 }
 
 int changeStat(int type, WarriorPlayer& object) {
@@ -418,16 +448,18 @@ int changeCheck() {
 
 int main()
 {
+    std::string name;
     int day = 0;
     WarriorPlayer test;
-    test.hp = test.maxHp;
     Bag eq;
 
     Helmet helmet;
     addToEQ(eq, helmet);
 
     std::cout << "Name your gladiator: " << std::endl;
-    changeName(test);
+    std::cin >> name;
+    test.giveName(name);
+
     for (;;) {
         srand(time(NULL));
         int option;
@@ -440,7 +472,7 @@ int main()
         switch (option)
         {
         case 1:
-            getStats(test);
+            test.getStats();
             break;
         case 2:
             changeStat(1, test);
@@ -474,20 +506,13 @@ int main()
             break;
         }
 
-        while (test.exp >= 10)
-        {
-            test.lvl++;
-            test.exp -= 10;
-            test.availableStatPoints += 2;
-            test.hp = test.maxHp;
-        }
-
-        if (test.hp <= 0) {
+        test.levelUp();
+        if (test.deathCheck() == 0) {
             std::cout << "\nYou died, survived " << day << " day/s" << std::endl;
             std::cout << "Your statistics:" << std::endl;
-            getStats(test);
-            return 0;
+            test.getStats();
         }
+
 
     }
     return 0;

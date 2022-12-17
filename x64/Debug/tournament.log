@@ -1,11 +1,8 @@
 ﻿  tournament.cpp
-C:\Nauka\C&Cpp\tournament\tournament.cpp(42,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(107,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(135,24): warning C4018: '<=': signed/unsigned mismatch
-C:\Nauka\C&Cpp\tournament\tournament.cpp(169,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(341,34): warning C4018: '<=': signed/unsigned mismatch
-C:\Nauka\C&Cpp\tournament\tournament.cpp(342,64): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(432,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(211): warning C4715: 'train': not all control paths return a value
-C:\Nauka\C&Cpp\tournament\tournament.cpp(63): warning C4715: 'Bag::displayItems': not all control paths return a value
+C:\Nauka\C&Cpp\tournament\tournament.cpp(83,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(150,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(199,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(372,64): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(464,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(241): warning C4715: 'train': not all control paths return a value
   tournament.vcxproj -> C:\Nauka\C&Cpp\tournament\x64\Debug\tournament.exe
