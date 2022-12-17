@@ -21,6 +21,14 @@ class WarriorEnemy : public Warrior {
 public:
     int expAmount;
     int goldAmount;
+public:
+    void giveStats(int atk, int hp) {
+        srand(time(NULL));
+        this->atk = rand() % this->atk + 1;
+        this->hp = rand() % this->hp + 5;
+        this->expAmount = rand() % 8 + 2;
+        this->goldAmount = rand() % 5 + 1;
+    }
 };
 
 class WarriorPlayer : public Warrior {
@@ -69,6 +77,14 @@ public:
         std::cout << "Gold amount: " << this->gold << std::endl;
         std::cout << "Stat points left: " << this->availableStatPoints << std::endl;
     }
+
+    WarriorEnemy createEnemy() { //better name generation
+        std::string enemyName = "Enemy";
+        WarriorEnemy enemy;
+        enemy.giveName(enemyName);
+        enemy.giveStats(this->atk, this->hp);
+        return enemy;
+    }
 };
 
 class Item {
@@ -78,14 +94,12 @@ public:
     int value;
     int baseDurability;
     int currentDurability;
-
-    Item() { //lvl parameter for balance
-        srand(time(NULL));
-        name = "test_helmet";
-        weight = rand() % 5 + 1;
-        value = rand() % 10 + 2;
-        baseDurability = rand() % 15 + 5;
-        currentDurability = baseDurability;
+public:
+    void displayItem() {
+        std::cout << "Name: " << this->name << std::endl;
+        std::cout << "Weight: " << this->weight << std::endl;
+        std::cout << "Value (g): " << this->value << std::endl;
+        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
     }
 };
 
@@ -93,16 +107,18 @@ class Bag {
 public:
     int bagSize = 10;
     std::vector<Item> bagItems;
-
+public:
     Bag() {}
     
     void displayItems() {
         for (int i = 0; i < bagItems.size(); i++) {
-            std::cout << "Name: " << bagItems[i].name << std::endl;
-            std::cout << "Weight: " << bagItems[i].weight << std::endl;
-            std::cout << "Value (g): " << bagItems[i].value << std::endl;
-            std::cout << "Durability: " << bagItems[i].currentDurability << " / " << bagItems[i].baseDurability << std::endl;
+            bagItems[i].displayItem();
         }
+    }
+
+    void addToEQ(Item& item) {
+        std::cout << "New item" << item.name << std::endl;
+        this->bagItems.push_back(item);
     }
 };
 
@@ -120,11 +136,45 @@ public:
 class Helmet : public DefensiveItem {
 public:
     int critDown;
+public:
+    Helmet() { //lvl parameter for balance
+        srand(time(NULL));
+        name = "Helmet";
+        weight = rand() % 5 + 1;
+        value = rand() % 10 + 2;
+        baseDurability = rand() % 15 + 5;
+        currentDurability = baseDurability;
+    }
+
+    void displayItem() {
+        std::cout << "Name: " << this->name << std::endl;
+        std::cout << "Weight: " << this->weight << std::endl;
+        std::cout << "Value (g): " << this->value << std::endl;
+        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
+        std::cout << "Crit Down: " << this->critDown << std::endl;
+    }
 };
 
 class Chestplate : public DefensiveItem {
 public:
     int maxHpUp;
+public:
+    Chestplate() { //lvl parameter for balance
+        srand(time(NULL));
+        name = "Chestplate";
+        weight = rand() % 8 + 2;
+        value = rand() % 15 + 5;
+        baseDurability = rand() % 30 + 10;
+        currentDurability = baseDurability;
+    }
+
+    void displayItem() {
+        std::cout << "Name: " << this->name << std::endl;
+        std::cout << "Weight: " << this->weight << std::endl;
+        std::cout << "Value (g): " << this->value << std::endl;
+        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
+        std::cout << "Crit Down: " << this->maxHpUp << std::endl;
+    }
 };
 
 class Greaves : public DefensiveItem {
@@ -142,18 +192,6 @@ public:
     int bleedChance;
 };
 
-
-
-WarriorEnemy createEnemy(WarriorPlayer& object) { //better name generation
-    WarriorEnemy enemy;
-    enemy.name = "Enemy";
-    srand(time(NULL));
-    enemy.atk = rand() % object.atk + 1;
-    enemy.hp = rand() % object.hp + 5;
-    enemy.expAmount = rand() % 8 + 2;
-    enemy.goldAmount = rand() % 5 + 1;
-    return enemy;
-}
 
 int changeStat(int type, WarriorPlayer& object) {
     int addedStats;
@@ -238,6 +276,7 @@ int train(WarriorPlayer& object) {
         std::cout << "Not enough stamina" << std::endl;
         return 0;
     }
+    return 0;
 }
 
 int inn(WarriorPlayer& object) {
@@ -412,31 +451,13 @@ int jobMenu(WarriorPlayer& object) {
 
 int arena(WarriorPlayer& object, int& date) { //stamina req, more rewards, some kind of progress, bosses
     printf("Arena");
-    WarriorEnemy enemy = createEnemy(object);
+    WarriorEnemy enemy;
     battle(object, enemy, date);
     return 0;
 }
 
 int smithy(WarriorPlayer& object) {
     printf("Smithy");
-    return 0;
-}
-
-int checkEQ(Bag& eq) {
-    Item j;
-
-    for (int i = 0; i < eq.bagItems.size(); i++)
-    {
-        eq.displayItems();
-    }
-
-    return 0;
-}
-
-int addToEQ(Bag& eq, Item& item) {
-
-    eq.bagItems.push_back(item);
-
     return 0;
 }
 
@@ -454,7 +475,13 @@ int main()
     Bag eq;
 
     Helmet helmet;
-    addToEQ(eq, helmet);
+    Helmet helmet2;
+    Chestplate chestplate;
+    Helmet helmet3;
+    eq.addToEQ(helmet);
+    eq.addToEQ(helmet2);
+    eq.addToEQ(chestplate);
+    eq.addToEQ(helmet3);
 
     std::cout << "Name your gladiator: " << std::endl;
     std::cin >> name;
@@ -498,7 +525,7 @@ int main()
             jobMenu(test);
             break;
         case 9:
-            checkEQ(eq);
+            eq.displayItems();
             break;
         case 10:
             return 0;
