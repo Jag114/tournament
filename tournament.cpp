@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <random>
 
 class Warrior {
 public:
@@ -139,11 +140,15 @@ public:
 public:
     Helmet() { //lvl parameter for balance
         srand(time(NULL));
-        name = "Helmet";
-        weight = rand() % 5 + 1;
-        value = rand() % 10 + 2;
-        baseDurability = rand() % 15 + 5;
-        currentDurability = baseDurability;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(1, 15);
+        std::cout << dist(gen) << std::endl;
+        this->name = "Helmet";
+        this->weight = rand() % 5 + 1;
+        this->value = rand() % 10 + 2;
+        this->baseDurability = rand() % 15 + 5;
+        this->currentDurability = baseDurability;
     }
 
     void displayItem() {
