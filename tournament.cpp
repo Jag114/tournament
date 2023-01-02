@@ -81,7 +81,7 @@ public:
         this->value = rand() % 10 + 2;
         this->baseDurability = rand() % 15 + 5;
         this->currentDurability = baseDurability;
-        this->critDown = rand() % 5 + 1;
+        this->critDown = rand() % 10 + 1;
     }
 
     void displayItem() {
@@ -104,11 +104,8 @@ public:
     }
 
     void displayItem() {
-        std::cout << "Name: " << this->name << std::endl;
-        std::cout << "Weight: " << this->weight << std::endl;
-        std::cout << "Value (g): " << this->value << std::endl;
-        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
-        std::cout << "Crit Down: " << this->maxHpUp << std::endl;
+        Item::displayItem();
+        std::cout << "Max Hp up: " << this->maxHpUp << std::endl;
     }
 };
 
@@ -486,22 +483,19 @@ public:
 
 class Shop {
 private:
-    Bag shopItems;
+    std::vector<Item> shopItems;
 
-    Bag createShop() {
-        Bag shop;
-        Helmet helmet;
-        Chestplate chestplate;
-        shop.addToEQ(helmet);
-        shop.addToEQ(chestplate);
-        return shop;
-    }
 public:
     Shop() {
-        this->shopItems = createShop();
+        Helmet helmet;
+        Chestplate chestplate;
+        Helmet helmet2;
+        shopItems.push_back(helmet);
+        shopItems.push_back(chestplate);
+        shopItems.push_back(helmet2);
     };
 
-    void menu(Bag& eq) {
+    void menu(Bag& eq, WarriorPlayer& player) {
         int option;
         bool wrongAnswer = true;
         std::cout << "What do you want to do?" << std::endl;
@@ -519,53 +513,59 @@ public:
         } while (wrongAnswer == true);
         
         if (option == 1) {
-            buyItem(eq);
+            buyItem(eq, player);
+            //restock
             Helmet helm;
-            this->shopItems.addToEQ(helm);
+            this->shopItems.push_back(helm);
         }
         else if(option == 2) {
-            sellItem(eq);
+            sellItem(eq, player);
         }
     }
 
     void displayItems() {
-        this->shopItems.displayItems();
+        for (Item item : this->shopItems) {
+            item.displayItem();
+        }
     }
 
-    void buyItem(Bag& eq) {
+    void buyItem(Bag& eq, WarriorPlayer& player) {
         int itemIndex;
         std::cout << "Which item do you want to buy?" << std::endl;
         std::cin >> itemIndex;
-        Item removedItem = this->shopItems.removeFromBag(itemIndex);
-        eq.addToEQ(removedItem);
+        Item removedItem = shopItems.at(itemIndex);
+        if (removedItem.value <= player.gold) {
+            eq.addToEQ(removedItem);
+            player.gold -= removedItem.value;
+        }
+        else {
+            std::cout << "Not enough gold for purchase" << std::endl;
+        }
     }
 
-    void sellItem(Bag& eq) {
+    void sellItem(Bag& eq, WarriorPlayer& player) {
         printf("Cant sell here traveler\n");
     }
 };
 
-
+void assignRandomStats(Item& item) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(1, 15); //different distribution for different items, lvls
+    std::cout << dist(rd);
+}
 
 int main()
 {
-    {
-        //separate function
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<int> dist(1, 15); //different distribution for different items
-        std::cout << dist(rd);
-    }
-
     std::string name;
     int day = 0;
-    WarriorPlayer test;
+    WarriorPlayer player;
     Bag eq;
     Shop shop;
 
     std::cout << "Name your gladiator: " << std::endl;
     std::cin >> name;
-    test.giveName(name);
+    player.giveName(name);
 
     for (;;) {
         srand(time(NULL));
@@ -579,33 +579,33 @@ int main()
         switch (option)
         {
         case 1:
-            test.getStats();
+            player.getStats();
             break;
         case 2:
-            test.changeStat();
+            player.changeStat();
             break;
         case 3:
-            test.train();
+            player.train();
             break;
         case 4:
-            test.inn();
+            player.inn();
             day++;
             break;
         case 5:
         {
             shop.displayItems();
-            shop.menu(eq);
+            shop.menu(eq, player);
             break;
         }
         case 6:
-            test.temple();
+            player.temple();
             break;
         case 7:
-            test.arena();
+            player.arena();
             day++;
             break;
         case 8:
-            test.jobMenu();
+            player.jobMenu();
             break;
         case 9:
             eq.displayItems();
@@ -616,11 +616,11 @@ int main()
             break;
         }
 
-        test.levelUp();
-        if (test.deathCheck() == 0) {
+        player.levelUp();
+        if (player.deathCheck() == 0) {
             std::cout << "\nYou died, survived " << day << " day/s" << std::endl;
             std::cout << "Your statistics:" << std::endl;
-            test.getStats();
+            player.getStats();
         }
 
 
