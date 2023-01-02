@@ -1,8 +1,8 @@
 ﻿  tournament.cpp
-C:\Nauka\C&Cpp\tournament\tournament.cpp(27,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(192,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(316,61): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(428,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(451,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(509,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(75,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(98,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(149,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(314,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(438,61): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Nauka\C&Cpp\tournament\tournament.cpp(571,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   tournament.vcxproj -> C:\Nauka\C&Cpp\tournament\x64\Debug\tournament.exe

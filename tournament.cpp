@@ -4,6 +4,129 @@
 #include <vector>
 #include <random>
 
+class Item {
+public:
+    std::string name;
+    int weight;
+    int value;
+    int baseDurability;
+    int currentDurability;
+public:
+    void displayItem() {
+        printf("Item Display\n");
+        std::cout << "Name: " << this->name << std::endl;
+        std::cout << "Weight: " << this->weight << std::endl;
+        std::cout << "Value (g): " << this->value << std::endl;
+        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
+        std::cout << std::endl;
+    }
+};
+
+class Bag { //combine with player so its not a separate object
+public:
+    int bagSize = 10;
+    std::vector<Item> bagItems;
+public:
+    Bag() {}
+
+    void displayItems() {
+        std::cout << "Bag contents:" << std::endl;
+        if (bagItems.size() > 0) {
+            for (int i = 0; i < bagItems.size(); i++) {
+                bagItems[i].displayItem(); //jak zrobic displayitem dla konkretnego itemu?
+            }
+        }
+        else {
+            std::cout << "Empty" << std::endl;
+        }
+    }
+
+    void addToEQ(Item& item) {
+        std::cout << "New item\n" << item.name << std::endl;
+        this->bagItems.push_back(item);
+    }
+
+    Item removeFromBag(int index) {
+        Item removedItem;
+        removedItem = this->bagItems.at(index);
+        this->bagItems.erase(this->bagItems.begin() + index);
+        std::cout << "Updated contents: " << std::endl;
+        this->displayItems();
+        return removedItem;
+    }
+};
+
+
+class DefensiveItem : public Item {
+public:
+    int armorStat;
+};
+
+class OffensiveItem : public Item {
+public:
+    int atkStat;
+};
+
+class Helmet : public DefensiveItem {
+public:
+    int critDown;
+public:
+    Helmet() { //lvl parameter for balance
+        srand(time(NULL));
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(1, 15);
+        this->name = "Helmet";
+        this->weight = rand() % 5 + 1;
+        this->value = rand() % 10 + 2;
+        this->baseDurability = rand() % 15 + 5;
+        this->currentDurability = baseDurability;
+        this->critDown = rand() % 5 + 1;
+    }
+
+    void displayItem() {
+        Item::displayItem();
+        std::cout << "Crit Down: " << this->critDown << std::endl;
+    }
+};
+
+class Chestplate : public DefensiveItem {
+public:
+    int maxHpUp;
+public:
+    Chestplate() { //lvl parameter for balance
+        srand(time(NULL));
+        name = "Chestplate";
+        weight = rand() % 8 + 2;
+        value = rand() % 15 + 5;
+        baseDurability = rand() % 30 + 10;
+        currentDurability = baseDurability;
+    }
+
+    void displayItem() {
+        std::cout << "Name: " << this->name << std::endl;
+        std::cout << "Weight: " << this->weight << std::endl;
+        std::cout << "Value (g): " << this->value << std::endl;
+        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
+        std::cout << "Crit Down: " << this->maxHpUp << std::endl;
+    }
+};
+
+class Greaves : public DefensiveItem {
+public:
+    int staminaCostDown;
+};
+
+class Pauldron : public DefensiveItem {
+public:
+    int extraTurnChanceUp;
+};
+
+class Sword : public OffensiveItem {
+public:
+    int bleedChance;
+};
+
 class Warrior {
 public:
     std::string name;
@@ -15,7 +138,6 @@ public:
     void giveName(std::string newName) {
         this->name = newName;
     }
-
 };
 
 class WarriorEnemy : public Warrior {
@@ -360,146 +482,86 @@ public:
         }
         return;
     }
-
-    void smithy() {
-        printf("Smithy");
-        return;
-    }
 };
 
-class Item {
-public:
-    std::string name;
-    int weight;
-    int value;
-    int baseDurability;
-    int currentDurability;
-public:
-    void displayItem() {
-        printf("Item Dsiplay\n");
-        std::cout << "Name: " << this->name << std::endl;
-        std::cout << "Weight: " << this->weight << std::endl;
-        std::cout << "Value (g): " << this->value << std::endl;
-        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
-    }
-};
+class Shop {
+private:
+    Bag shopItems;
 
-class Bag { //combine with player so its not a separate object
+    Bag createShop() {
+        Bag shop;
+        Helmet helmet;
+        Chestplate chestplate;
+        shop.addToEQ(helmet);
+        shop.addToEQ(chestplate);
+        return shop;
+    }
 public:
-    int bagSize = 10;
-    std::vector<Item> bagItems;
-public:
-    Bag() {}
-    
-    void displayItems() {
-        std::cout << "Bag contents:" << std::endl;
-        if (bagItems.size() > 0) {
-            for (int i = 0; i < bagItems.size(); i++) {
-                bagItems[i].displayItem(); //jak zrobic displayitem dla konkretnego itemu?
+    Shop() {
+        this->shopItems = createShop();
+    };
+
+    void menu(Bag& eq) {
+        int option;
+        bool wrongAnswer = true;
+        std::cout << "What do you want to do?" << std::endl;
+        std::cout << "1 - Buy\n2 - Sell\n";
+        do {
+            std::cin >> option;
+            if (option != 1 && option != 2) {
+                std::cout << "Wrong option chosen" << std::endl;
+                std::cin.clear();
+                std::cin.ignore(100, '\n');
             }
+            else {
+                wrongAnswer = false;
+            }
+        } while (wrongAnswer == true);
+        
+        if (option == 1) {
+            buyItem(eq);
+            Helmet helm;
+            this->shopItems.addToEQ(helm);
         }
-        else {
-            std::cout << "Empty" <<std::endl;
+        else if(option == 2) {
+            sellItem(eq);
         }
     }
 
-    void addToEQ(Item& item) {
-        std::cout << "New item\n" << item.name << std::endl;
-        this->bagItems.push_back(item);
+    void displayItems() {
+        this->shopItems.displayItems();
+    }
+
+    void buyItem(Bag& eq) {
+        int itemIndex;
+        std::cout << "Which item do you want to buy?" << std::endl;
+        std::cin >> itemIndex;
+        Item removedItem = this->shopItems.removeFromBag(itemIndex);
+        eq.addToEQ(removedItem);
+    }
+
+    void sellItem(Bag& eq) {
+        printf("Cant sell here traveler\n");
     }
 };
 
 
-class DefensiveItem : public Item {
-public:
-    int armorStat;
-};
-
-class OffensiveItem : public Item {
-public:
-    int atkStat;
-};
-
-class Helmet : public DefensiveItem {
-public:
-    int critDown;
-public:
-    Helmet() { //lvl parameter for balance
-        srand(time(NULL));
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dist(1, 15);
-        this->name = "Helmet";
-        this->weight = rand() % 5 + 1;
-        this->value = rand() % 10 + 2;
-        this->baseDurability = rand() % 15 + 5;
-        this->currentDurability = baseDurability;
-        this->critDown = rand() % 5 + 1;
-    }
-
-    void displayItem() {
-        Item::displayItem();
-        std::cout << "Crit Down: " << this->critDown << std::endl;
-    }
-};
-
-class Chestplate : public DefensiveItem {
-public:
-    int maxHpUp;
-public:
-    Chestplate() { //lvl parameter for balance
-        srand(time(NULL));
-        name = "Chestplate";
-        weight = rand() % 8 + 2;
-        value = rand() % 15 + 5;
-        baseDurability = rand() % 30 + 10;
-        currentDurability = baseDurability;
-    }
-
-    void displayItem() {
-        std::cout << "Name: " << this->name << std::endl;
-        std::cout << "Weight: " << this->weight << std::endl;
-        std::cout << "Value (g): " << this->value << std::endl;
-        std::cout << "Durability: " << this->currentDurability << " / " << this->baseDurability << std::endl;
-        std::cout << "Crit Down: " << this->maxHpUp << std::endl;
-    }
-};
-
-class Greaves : public DefensiveItem {
-public:
-    int staminaCostDown;
-};
-
-class Pauldron : public DefensiveItem {
-public:
-    int extraTurnChanceUp;
-};
-
-class Sword : public OffensiveItem {
-public:
-    int bleedChance;
-};
 
 int main()
 {
-    //separate function
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, 15); //different distribution for different items
-    std::cout << dist(rd);
+    {
+        //separate function
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> dist(1, 15); //different distribution for different items
+        std::cout << dist(rd);
+    }
 
     std::string name;
     int day = 0;
     WarriorPlayer test;
     Bag eq;
-
-    /*
-    Helmet helmet;
-    helmet.displayItem();
-
-    eq.addToEQ(helmet);
-    eq.displayItems();
-    */
+    Shop shop;
 
     std::cout << "Name your gladiator: " << std::endl;
     std::cin >> name;
@@ -530,8 +592,11 @@ int main()
             day++;
             break;
         case 5:
-            test.smithy();
+        {
+            shop.displayItems();
+            shop.menu(eq);
             break;
+        }
         case 6:
             test.temple();
             break;
