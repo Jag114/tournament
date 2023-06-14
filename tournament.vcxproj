@@ -129,6 +129,21 @@
   <ItemGroup>
     <ClCompile Include="tournament.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bag.h" />
+    <ClInclude Include="Chestplate.h" />
+    <ClInclude Include="DefensiveItem.h" />
+    <ClInclude Include="Greaves.h" />
+    <ClInclude Include="Helmet.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="OffensiveItem.h" />
+    <ClInclude Include="Pauldron.h" />
+    <ClInclude Include="Shop.h" />
+    <ClInclude Include="Sword.h" />
+    <ClInclude Include="Warrior.h" />
+    <ClInclude Include="WarriorEnemy.h" />
+    <ClInclude Include="WarriorPlayer.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

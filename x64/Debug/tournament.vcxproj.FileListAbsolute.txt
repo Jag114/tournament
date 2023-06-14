@@ -1,1 +1,2 @@
 C:\Nauka\C&Cpp\tournament\x64\Debug\tournament.exe
+D:\Projekty\tournament\x64\Debug\tournament.exe

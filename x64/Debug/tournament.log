@@ -1,8 +1,23 @@
 ﻿  tournament.cpp
-C:\Nauka\C&Cpp\tournament\tournament.cpp(75,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(98,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(146,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(311,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(435,61): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-C:\Nauka\C&Cpp\tournament\tournament.cpp(574,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  tournament.vcxproj -> C:\Nauka\C&Cpp\tournament\x64\Debug\tournament.exe
+D:\Projekty\tournament\Helmet.h(8,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Projekty\tournament\Chestplate.h(8,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Projekty\tournament\tournament.cpp(73,18): error C3646: 'createEnemy': unknown override specifier
+D:\Projekty\tournament\tournament.cpp(73,29): error C2059: syntax error: '('
+D:\Projekty\tournament\tournament.cpp(73,32): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+D:\Projekty\tournament\tournament.cpp(276,17): error C2061: syntax error: identifier 'WarriorEnemy'
+D:\Projekty\tournament\tournament.cpp(183,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Projekty\tournament\tournament.cpp(286,41): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(287,40): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(289,38): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(290,43): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(290,79): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(293,38): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(294,39): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(307,33): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(311,33): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(318,37): error C2065: 'enemyObject': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(333,9): error C2065: 'WarriorEnemy': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(333,22): error C2146: syntax error: missing ';' before identifier 'enemy'
+D:\Projekty\tournament\tournament.cpp(333,22): error C2065: 'enemy': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(334,22): error C2065: 'enemy': undeclared identifier
+D:\Projekty\tournament\tournament.cpp(443,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
